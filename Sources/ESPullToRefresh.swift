@@ -300,7 +300,11 @@ open class ESRefreshHeaderView: ESRefreshComponent {
         scrollView.contentOffset.y = previousOffset
         previousOffset -= animator.executeIncremental
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveLinear, animations: {
-            scrollView.contentOffset.y = -insets.top
+            if #available(iOS 11.0, *) {
+                scrollView.contentOffset.y = -scrollView.adjustedContentInset.top
+            } else {
+                scrollView.contentOffset.y = -insets.top
+            }
         }, completion: { (finished) in
             self.handler?()
             // un-ignore observer
@@ -324,7 +328,11 @@ open class ESRefreshHeaderView: ESRefreshComponent {
         scrollView.contentInset.top = self.scrollViewInsets.top
         scrollView.contentOffset.y =  self.previousOffset
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveLinear, animations: {
-            scrollView.contentOffset.y = -self.scrollViewInsets.top
+            if #available(iOS 11.0, *) {
+                scrollView.contentOffset.y = -scrollView.adjustedContentInset.top
+            } else {
+                scrollView.contentOffset.y = -self.scrollViewInsets.top
+            }
             }, completion: { (finished) in
                 self.animator.refresh(view: self, stateDidChange: .pullToRefresh)
                 super.stop()
